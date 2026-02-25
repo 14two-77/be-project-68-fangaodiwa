@@ -46,6 +46,8 @@ const ReservationSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
+}, {
+    autoCreate: true,
 });
 
 module.exports = mongoose.model('Reservation', ReservationSchema);

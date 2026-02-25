@@ -56,15 +56,19 @@ const ShopSchema = new mongoose.Schema({
     }
 }, {
     toJSON: {
-        virtuals: true
+        virtuals: true,
+        getters: true
     },
     toObject: {
-        virtuals: true
-    }
+        virtuals: true,
+        getters: true
+    },
+    id: false,
+    autoCreate: true,
 });
 
-ShopSchema.virtual('servieces', {
-    ref: 'Serviece',
+ShopSchema.virtual('services', {
+    ref: 'Service',
     localField: '_id',
     foreignField: 'shop',
     justOne: false
