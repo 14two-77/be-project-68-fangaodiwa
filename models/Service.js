@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const ServiceShema = new mongoose.Schema({
+const ServiceSchema = new mongoose.Schema({
     shop: {
         type: mongoose.Schema.ObjectId,
         ref: 'Shop',
@@ -27,7 +27,8 @@ const ServiceShema = new mongoose.Schema({
         min: [
             0,
             'Price cannot be a negative number'
-        ]
+        ],
+        set: v => Math.round(v * 100) / 100
     },
     duration: {
         type: Number,
@@ -59,6 +60,8 @@ const ServiceShema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
+}, {
+    autoCreate: true,
 });
 
-module.exports = mongoose.model("Service", ServiceShema)
+module.exports = mongoose.model("Service", ServiceSchema)

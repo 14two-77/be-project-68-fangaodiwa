@@ -61,6 +61,8 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
+}, {
+    autoCreate: true,
 });
 
 UserSchema.pre('save', async function () {
