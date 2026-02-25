@@ -6,13 +6,15 @@ const { sendTokenResponse } = require('./../utils/utils.js');
 // @access Public
 exports.register = async (req, res, next) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, phone, password, role, tier } = req.body;
 
         const user = await User.create({
             name,
             email,
+            phone,
             password,
-            role
+            role,
+            tier
         });
 
         sendTokenResponse(user, 200, res);

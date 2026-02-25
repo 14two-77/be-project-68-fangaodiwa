@@ -25,13 +25,10 @@ const UserSchema = new mongoose.Schema({
     phone: {
         type: String,
         required: [
-            function () {
-                return this.role === 'user';
-            },
+            true,
             "Please add a phone"
         ],
         unique: true,
-        sparse: true,
     },
     password: {
         type: String,
