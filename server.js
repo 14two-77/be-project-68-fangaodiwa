@@ -1,3 +1,4 @@
+// Package
 const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require('cookie-parser');
@@ -7,36 +8,35 @@ const helmet = require('helmet');
 const { xss } = require('express-xss-sanitizer');
 const rateLimit = require('express-rate-limit');
 
-// โหลด Environment Variables
-dotenv.config({
-    path: "./config/config.env"
-});
-
-// เชื่อมต่อ Database
-connectDB();
-
-const app = express();
-
-// กำหนด Rate Limit
-const limiter = rateLimit({
-    windowMs: 10 * 60 * 1000,
-    max: 100
-});
-
-// เรียกใช้ Collection Models
+// Create Collection Models
 require('./models/User.js');
 require('./models/Shop.js');
 require('./models/Service.js');
 require('./models/Reservation.js');
 
-// นำเข้า Routes
+// Routes
 const auth = require("./routes/auth.js");
 const shops = require("./routes/shops.js");
-const reservations = require('./routes/reservations'); // ✅ รวม import ไว้ด้วยกัน
+const reservations = require('./routes/reservations');
+
+// Environment
+dotenv.config({
+    path: "./config/config.env"
+});
+
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 100
+});
+
+const app = express();
+
+// Connect Database
+connectDB();
 
 app.set('query parser', 'extended');
 
-// เรียกใช้ Middlewares
+// Middlewares
 app.use([
     express.json(),
     cookieParser(),
@@ -46,11 +46,12 @@ app.use([
     limiter
 ]);
 
-// ใช้งาน Routes
+// apis
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/shops", shops);
-app.use('/api/v1/reservations', reservations); // ✅ แก้ไขเป็น v1 แล้ว
+app.use('/api/v1/reservations', reservations);
 
+// Start server 
 const PORT = process.env.PORT || 5001;
 const NODE_ENV = process.env.NODE_ENV;
 
