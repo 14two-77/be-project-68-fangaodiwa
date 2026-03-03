@@ -7,13 +7,13 @@ const router = express.Router();
 router.use(protect);
 
 router.route('/')
-    .get(getShops)
-    .post(authorize('admin'), createShop);
+  .get(getShops)
+  .post(authorize('admin'), createShop);
 
 router.route('/:id')
-    .get(getShop)
-    .put(authorize('admin'), updateShop)
-    .delete(authorize('admin'), deleteShop);
-    
+  .get(getShop)
+  .put(authorize('admin'), updateShop)
+  .delete(authorize('admin'), deleteShop);
+
 
 module.exports = router;

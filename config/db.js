@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
+const { setServers } = require("node:dns/promises");
 
 const connectDB = async () => {
-    mongoose.set("strictQuery", true);
+  // Override DNS to use public resolvers (Cloudflare, Google) to get around local DNS issues with MongoDB SRV records
+  setServers(["1.1.1.1", "8.8.8.8"]);
 
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+  mongoose.set("strictQuery", true);
 
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  const conn = await mongoose.connect(process.env.MONGO_URI);
+
+  console.log(`MongoDB Connected: ${conn.connection.host}`);
 }
 
 module.exports = connectDB;

@@ -17,16 +17,18 @@ require('./models/Reservation.js');
 // Routes
 const auth = require("./routes/auth.js");
 const shops = require("./routes/shops.js");
+const services = require('./routes/services');
+const users = require('./routes/users');
 const reservations = require('./routes/reservations');
 
 // Environment
 dotenv.config({
-    path: "./config/config.env"
+  path: "./config/config.env"
 });
 
 const limiter = rateLimit({
-    windowMs: 10 * 60 * 1000,
-    max: 100
+  windowMs: 10 * 60 * 1000,
+  max: 100
 });
 
 const app = express();
@@ -38,17 +40,19 @@ app.set('query parser', 'extended');
 
 // Middlewares
 app.use([
-    express.json(),
-    cookieParser(),
-    mongoSenitize(),
-    helmet(),
-    xss(),
-    limiter
+  express.json(),
+  cookieParser(),
+  mongoSenitize(),
+  helmet(),
+  xss(),
+  limiter
 ]);
 
 // apis
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/shops", shops);
+app.use('/api/v1/services', services);
+app.use('/api/v1/users', users);
 app.use('/api/v1/reservations', reservations);
 
 // Start server 
@@ -58,6 +62,6 @@ const NODE_ENV = process.env.NODE_ENV;
 const server = app.listen(PORT, console.log(`Server running in ${NODE_ENV} mode on port ${PORT}`));
 
 process.on("unhandledRejection", (err, promise) => {
-    console.log(`Error: ${err.message}`);
-    server.close(() => process.exit(1));
+  console.log(`Error: ${err.message}`);
+  server.close(() => process.exit(1));
 });
