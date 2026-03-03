@@ -1,0 +1,24 @@
+@startuml sequence-diagram
+
+header Massage Reservation Sequence Diagram
+title "Massage Reservation (GET)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:reservations" as routerReservations
+participant "<<controller>>\n:reservations" as controllersReservations
+participant "<<model>>\n:Reservation" as modelReservation
+database "<<MongoDB>>\n:reservations" as reservationsDatabase
+
+== 4. User view massage reservation. ==
+
+client -> server ++: req.get('/api/v1/reservations')
+server -> routerReservations ++: app.use('/api/v1/reservations',reservations)
+routerReservations -> controllersReservations ++: getReservations()
+controllersReservations-> modelReservation ++: find({ user: req.user.id })
+modelReservation -> reservationsDatabase ++: ReservationSchema
+reservationsDatabase --> modelReservation --: reservation
+controllersReservations <-- modelReservation --: reservation
+controllersReservations -> client --: response
+
+@enduml

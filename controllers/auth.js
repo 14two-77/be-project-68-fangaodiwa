@@ -2,7 +2,7 @@ const User = require("./../models/User.js");
 const { sendTokenResponse } = require('./../utils/utils.js');
 
 // @desc Register user
-// @route GET /api/v1/auth/register
+// @route POST /api/v1/auth/register
 // @access Public
 exports.register = async (req, res, next) => {
     try {
@@ -28,7 +28,7 @@ exports.register = async (req, res, next) => {
 }
 
 // @desc Login user
-// @route GET /api/v1/auth/login
+// @route POST /api/v1/auth/login
 // @access Public
 exports.login = async (req, res, next) => {
     try {
