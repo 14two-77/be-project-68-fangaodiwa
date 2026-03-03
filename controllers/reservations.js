@@ -49,6 +49,7 @@ exports.addReservation = async (req, res, next) => {
 
     const existedReservations = await Reservation.find({
       user: req.user.id,
+      status: { $ne: 'completed' },
       $or: [
         { appointment_date: { $gt: currentDate } },
         {
