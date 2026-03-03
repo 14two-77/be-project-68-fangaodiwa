@@ -1,0 +1,12 @@
+@startuml User-Management-Package
+left to right direction
+skinparam actorStyle awesome
+
+actor "Admin" as A
+
+rectangle "Fangaodiwa Spa - User Management" {
+    usecase "Upgrade User Tier\nvip → vvip_poseidon" as UC_UPGRADE_TIER
+}
+
+A --> UC_UPGRADE_TIER
+@enduml

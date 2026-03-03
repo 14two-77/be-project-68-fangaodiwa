@@ -1,0 +1,20 @@
+@startuml Shop-Package
+left to right direction
+skinparam actorStyle awesome
+
+actor "User" as U
+actor "Admin" as A
+A --|> U
+
+rectangle "Fangaodiwa Spa - Shop" {
+    usecase "(3) View Massage Shop List\nname, address, phone, open/close time" as UC_VIEW_SHOPS
+    usecase "Create Shop" as UC_CREATE_SHOP
+    usecase "Update Shop" as UC_UPDATE_SHOP
+    usecase "Delete Shop\n(cascade: services + reservations)" as UC_DELETE_SHOP
+}
+
+U --> UC_VIEW_SHOPS
+A --> UC_CREATE_SHOP
+A --> UC_UPDATE_SHOP
+A --> UC_DELETE_SHOP
+@enduml

@@ -1,0 +1,27 @@
+@startuml Reservation-Package
+left to right direction
+skinparam actorStyle awesome
+
+actor "User" as U
+actor "Admin" as A
+A --|> U
+
+rectangle "Fangaodiwa Spa - Reservation" {
+    usecase "(3) Create Reservation\nup to 3 queues; tier required" as UC_CREATE_RES
+    usecase "(4) View Own Reservations" as UC_VIEW_OWN_RES
+    usecase "(5) Edit Own Reservation" as UC_UPDATE_OWN_RES
+    usecase "(6) Delete Own Reservation" as UC_DELETE_OWN_RES
+    usecase "(7) View Any Reservation" as UC_VIEW_ALL_RES
+    usecase "(8) Edit Any Reservation" as UC_UPDATE_ANY_RES
+    usecase "(9) Delete Any Reservation" as UC_DELETE_ANY_RES
+}
+
+U --> UC_CREATE_RES
+U --> UC_VIEW_OWN_RES
+U --> UC_UPDATE_OWN_RES
+U --> UC_DELETE_OWN_RES
+
+A --> UC_VIEW_ALL_RES
+A --> UC_UPDATE_ANY_RES
+A --> UC_DELETE_ANY_RES
+@enduml

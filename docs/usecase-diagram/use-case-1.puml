@@ -1,0 +1,17 @@
+
+@startuml Authentication-Package
+left to right direction
+skinparam actorStyle awesome
+
+actor "User" as U
+
+rectangle "Fangaodiwa Spa - Authentication" {
+    usecase "(1) Register\nname, phone, email, password" as UC_REG
+    usecase "(2) Login" as UC_LOGIN
+    usecase "(2) Logout" as UC_LOGOUT
+}
+
+U --> UC_REG
+U --> UC_LOGIN
+U --> UC_LOGOUT
+@enduml

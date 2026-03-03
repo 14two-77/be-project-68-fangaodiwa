@@ -1,0 +1,22 @@
+@startuml Service-Package
+left to right direction
+skinparam actorStyle awesome
+
+actor "User" as U
+actor "Admin" as A
+A --|> U
+
+rectangle "Fangaodiwa Spa - Service" {
+    usecase "View Services\n(filter by shop optional)" as UC_VIEW_SERVICES
+    usecase "View Single Service" as UC_VIEW_SERVICE
+    usecase "Create Service" as UC_CREATE_SERVICE
+    usecase "Update Service" as UC_UPDATE_SERVICE
+    usecase "Delete Service" as UC_DELETE_SERVICE
+}
+
+U --> UC_VIEW_SERVICES
+U --> UC_VIEW_SERVICE
+A --> UC_CREATE_SERVICE
+A --> UC_UPDATE_SERVICE
+A --> UC_DELETE_SERVICE
+@enduml
