@@ -1,77 +1,73 @@
 const mongoose = require("mongoose");
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const UserSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [
-      true,
-      "Please add a name"
-    ]
+const UserSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Please add a name"],
+    },
+    email: {
+      type: String,
+      required: [true, "Please add an email"],
+      unique: true,
+      match: [
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        "Please add a valid email",
+      ],
+    },
+    phone: {
+      type: String,
+      required: [true, "Please add a phone"],
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: [true, "Please add a password"],
+      minlength: 6,
+      select: false,
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+    tier: {
+      type: String,
+      enum: ["vip", "vvip_poseidon"],
+      default: "vip",
+    },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  email: {
-    type: String,
-    required: [
-      true,
-      "Please add an email"
-    ],
-    unique: true,
-    match: [
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      "Please add a valid email"
-    ]
+  {
+    autoCreate: true,
   },
-  phone: {
-    type: String,
-    required: [
-      true,
-      "Please add a phone"
-    ],
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: [
-      true,
-      "Please add a password"
-    ],
-    minlength: 6,
-    select: false
-  },
-  role: {
-    type: String,
-    enum: [
-      'user',
-      'admin'
-    ],
-    default: 'user'
-  },
-  tier: {
-    type: String,
-    enum: [
-      'vip',
-      'vvip_poseidon'
-    ],
-    default: 'vip'
-  },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-}, {
-  autoCreate: true,
-});
+);
 
-UserSchema.pre('save', async function () {
+UserSchema.pre("save", async function () {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
 UserSchema.methods.getSignedJwtToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE });
+  return jwt.sign(
+    {
+      id: this._id,
+      name: this.name,
+      phone: this.phone,
+      email: this.email,
+      role: this.role,
+      tier: this.tier,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRE },
+  );
 };
 
 UserSchema.methods.matchPassword = async function (enteredPassword) {
