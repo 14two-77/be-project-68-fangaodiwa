@@ -45,7 +45,7 @@ app.use([
   mongoSenitize(),
   helmet(),
   xss(),
-  limiter
+  // limiter
 ]);
 
 // apis

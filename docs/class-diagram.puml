@@ -120,8 +120,9 @@ Reservation  ..> ReservationRepr : <<use>>
 Auth        ..> UserRepr        : <<use>>
 UserTier    ..> UserRepr        : <<use>>
 
-' ── Representation inheritance ────────────────────────────────────────
-ShopRepr    <|-- ServiceRepr  : shop ref
-UserRepr    <|-- ReservationRepr : user ref
+' ── Representation cross-references (ObjectId refs) ──────────────────
+ServiceRepr     ..> ShopRepr        : <<ref>> shop
+ReservationRepr ..> UserRepr        : <<ref>> user
+ReservationRepr ..> ServiceRepr     : <<ref>> service
 
 @enduml

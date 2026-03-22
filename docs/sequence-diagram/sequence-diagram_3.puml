@@ -1,0 +1,38 @@
+@startuml sequence-diagram
+
+header Massage Reservation Sequence Diagram
+title "Massage Reservation (POST)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:reservations" as routerReservations
+participant "<<middleware>>\n:protect" as middlewareProtect
+participant "<<controllers>>\n:reservations" as controllersReservations
+participant "<<model>>\n:Reservation" as modelReservation
+participant "<<model>>\n:Service" as modelService
+database "<<MongoDB>>\n:reservations" as reservationsDatabase
+
+== 3. User create massage reservation. ==
+
+client -> server ++: req.post('/api/v1/reservations')
+server -> routerReservations ++: app.use('/api/v1/reservations', reservations)
+routerReservations -> middlewareProtect ++: protect()
+middlewareProtect --> routerReservations --: next()
+routerReservations -> controllersReservations ++: addReservation()
+controllersReservations -> modelReservation ++: find({ user, ... }) (status != completed, upcoming)
+modelReservation -> reservationsDatabase ++: ReservationSchema
+reservationsDatabase --> modelReservation --: existedReservations
+controllersReservations <-- modelReservation --: existedReservations
+note right of controllersReservations: if count >= 3 (non-admin)\nreturn 400 error
+controllersReservations -> modelService ++: findById(req.body.service)
+modelService -> reservationsDatabase ++: ServiceSchema
+reservationsDatabase --> modelService --: service
+controllersReservations <-- modelService --: service
+note right of controllersReservations: if service.tier == vvip_poseidon\nand user.tier != vvip_poseidon\nreturn 403 error
+controllersReservations -> modelReservation ++: Reservation.create(req.body)
+modelReservation -> reservationsDatabase ++: ReservationSchema
+reservationsDatabase --> modelReservation --: reservation
+controllersReservations <-- modelReservation --: reservation
+controllersReservations -> client --: response
+
+@enduml

@@ -6,16 +6,24 @@ title "Massage Reservation (PUT)"
 participant "Client" as client
 participant "<<javaScript>>\n:server" as server
 participant "<<router>>\n:reservations" as routerReservations
-participant "<<controller>>\n:reservations" as controllersReservations
+participant "<<middleware>>\n:protect" as middlewareProtect
+participant "<<controllers>>\n:reservations" as controllersReservations
 participant "<<model>>\n:Reservation" as modelReservation
 database "<<MongoDB>>\n:reservations" as reservationsDatabase
 
-== 4. Admin edit any massage reservation. ==
+== 8. Admin edit any massage reservation. ==
 
 client -> server ++: req.put('/api/v1/reservations/:id')
-server -> routerReservations ++: app.use('/api/v1/reservations',reservations)
+server -> routerReservations ++: app.use('/api/v1/reservations', reservations)
+routerReservations -> middlewareProtect ++: protect()
+middlewareProtect --> routerReservations --: next()
 routerReservations -> controllersReservations ++: updateReservation()
-controllersReservations-> modelReservation ++: findByIdAndUpdate(req.params.id, req.body)
+controllersReservations -> modelReservation ++: findById(req.params.id)
+modelReservation -> reservationsDatabase ++: ReservationSchema
+reservationsDatabase --> modelReservation --: reservation
+controllersReservations <-- modelReservation --: reservation
+note right of controllersReservations: role == admin\nownership check skipped
+controllersReservations -> modelReservation ++: findByIdAndUpdate(req.params.id, req.body, { new, runValidators })
 modelReservation -> reservationsDatabase ++: ReservationSchema
 reservationsDatabase --> modelReservation --: reservation
 controllersReservations <-- modelReservation --: reservation

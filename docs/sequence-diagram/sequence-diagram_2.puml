@@ -10,15 +10,16 @@ participant "<<controllers>>\n:auth" as controllersAuth
 participant "<<model>>\n:User" as modelUser
 database "<<MongoDB>>\n:users" as  usersDatabase
 
-== 1. User Login. ==
+== 2. User Login. ==
 
-client -> server ++: req.post('/api/v1/login')
-server -> routerAuth ++: app.use('/api/v1/auth',auth)
+client -> server ++: req.post('/api/v1/auth/login')
+server -> routerAuth ++: app.use('/api/v1/auth', auth)
 routerAuth -> controllersAuth ++: login()
-controllersAuth -> modelUser ++: findOne({ email })\nmatchPassword(password);
+controllersAuth -> modelUser ++: findOne({ email }).select('+password')
 modelUser -> usersDatabase ++: UserSchema
 usersDatabase --> modelUser --: user
 controllersAuth <-- modelUser --: user
-controllersAuth -> client --: response
+controllersAuth -> controllersAuth: user.matchPassword(password)
+controllersAuth -> client --: sendTokenResponse(user, 200, res)
 
 @enduml
